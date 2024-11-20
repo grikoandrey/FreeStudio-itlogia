@@ -120,7 +120,6 @@ export class Router {
                 this.titlePageElement.innerText = `${newRoute.title} | FL Studio`;
             }
             if (newRoute.filePAthTemplate) {
-                // document.body.className = '';
                 let contentBlock = this.contentPageElement;
                 if (newRoute.useLayout) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout)
