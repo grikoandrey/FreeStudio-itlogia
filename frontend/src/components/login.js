@@ -1,6 +1,12 @@
 export class Login {
-    constructor() {
+    constructor(openNewRoute) {
+        this.openNewRoute = openNewRoute;
         // console.log('Login component rendered!');
+        if (localStorage.getItem('accessToken')) {
+            return this.openNewRoute('/');
+        }
+
+
         this.emailElement = document.getElementById('email');
         this.passwordElement = document.getElementById('password');
         this.rememberMeElement = document.getElementById('remember');
@@ -54,10 +60,8 @@ export class Login {
             localStorage.setItem('refreshToken', result.refreshToken);
             localStorage.setItem('userInfo', JSON.stringify({id: result.id, name: result.name}));
 
-            window.location.href = '/';
-        } else {
-
+            // window.location.href = '/';
+            this.openNewRoute('/');
         }
-
     };
 }

@@ -6,53 +6,69 @@
     <div class="card">
         <div class="card-body login-card-body">
             <p class="login-box-msg">Register a new membership</p>
-
+            <div id="common-error" class="error invalid-feedback text-center mb-3">Failed to register user. Contact
+                support
+            </div>
             <form>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Full name">
+                    <input type="text" class="form-control" placeholder="Name" id="name">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user"></span>
                         </div>
                     </div>
+                    <span id="name-error" class="error invalid-feedback">enter a valid Name</span>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email">
+                    <input type="text" class="form-control" placeholder="Last Name" id="lastName">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                    <span id="lastName-error" class="error invalid-feedback">enter a valid Lastname</span>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email" id="email">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
                         </div>
                     </div>
+                    <span id="email-error" class="error invalid-feedback">enter a valid email</span>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Password">
+                    <input type="password" class="form-control" placeholder="Password" id="password">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
                     </div>
+                    <span id="password-error" class="error invalid-feedback">enter a valid password (8 digits and letters)</span>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Retype password">
+                    <input type="password" class="form-control" placeholder="Retype password" id="rePassword">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
                     </div>
+                    <span id="rePassword-error" class="error invalid-feedback">enter a valid password</span>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
                         <div class="icheck-primary">
-                            <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                            <label for="agreeTerms">
+                            <input type="checkbox" id="agree" name="terms" value="agree">
+                            <label for="agree">
                                 I agree to the <a href="javascript:void(0);">terms</a>
                             </label>
+                            <span id="agree-error" class="error invalid-feedback">Please agree to the terms</span>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button type="button" class="btn btn-primary btn-block">Register</button>
+                        <button type="button" class="btn btn-primary btn-block" id="process-button">Register</button>
                     </div>
                 </div>
             </form>

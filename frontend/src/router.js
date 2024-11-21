@@ -1,6 +1,7 @@
 import {Dashboard} from "./components/dashboard.js";
 import {Login} from "./components/login.js";
 import {Signup} from "./components/signup.js";
+import {Logout} from "./components/logout.js";
 
 export class Router {
     constructor() {
@@ -33,7 +34,7 @@ export class Router {
                 load: () => {
                     document.body.classList.add('login-page');
                     document.body.style.height = '100vh';
-                    new Login();
+                    new Login(this.openNewRoute.bind(this));
                 },
                 unload: () => {
                     document.body.classList.remove('login-page');
@@ -49,13 +50,19 @@ export class Router {
                 load: () => {
                     document.body.classList.add('register-page');
                     document.body.style.height = '100vh';
-                    new Signup();
+                    new Signup(this.openNewRoute.bind(this));
                 },
                 unload: () => {
                     document.body.classList.remove('register-page');
                     document.body.style.height = 'auto';
                 },
                 styles: ['icheck-bootstrap.min.css'],
+            },
+            {
+                route: '/logout',
+                load: () => {
+                new Logout(this.openNewRoute.bind(this));
+        }
             },
         ];
 
@@ -66,10 +73,16 @@ export class Router {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
         window.addEventListener('popstate', this.activateRoute.bind(this));
         // window.addEventListener('hashchange', this.activateRoute.bind(this));
-        document.addEventListener('click', this.openNewRoute.bind(this));
+        document.addEventListener('click', this.clickHandler.bind(this));
     }
 
-    async openNewRoute(e) {
+    async openNewRoute(url) {
+        const currentRoute = window.location.pathname;
+        history.pushState(null, '', url);
+        await this.activateRoute(null, currentRoute);
+    }
+
+    async clickHandler(e) {
 
         let element = null;
         if(e.target.nodeName === 'A') {
@@ -85,9 +98,7 @@ export class Router {
             if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
                 return;
             }
-            const currentRoute = window.location.pathname;
-            history.pushState(null, '', url);
-            await this.activateRoute(null, currentRoute);
+            await this.openNewRoute(url);
         }
     }
 
