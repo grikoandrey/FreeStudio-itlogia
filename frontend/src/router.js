@@ -1,7 +1,8 @@
 import {Dashboard} from "./components/dashboard.js";
-import {Login} from "./components/login.js";
-import {Signup} from "./components/signup.js";
-import {Logout} from "./components/logout.js";
+import {Login} from "./components/auth/login.js";
+import {Signup} from "./components/auth/signup.js";
+import {Logout} from "./components/auth/logout.js";
+import {FreelancersList} from "./components/freelancers/freelancers-list.js";
 
 export class Router {
     constructor() {
@@ -14,7 +15,7 @@ export class Router {
             {
                 route: '/',
                 title: 'Dashboard',
-                filePAthTemplate: '/templates/dashboard.html',
+                filePAthTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new Dashboard();
@@ -23,13 +24,13 @@ export class Router {
             {
                 route: '/404',
                 title: 'Page Not Found',
-                filePAthTemplate: '/templates/404.html',
+                filePAthTemplate: '/templates/pages/404.html',
                 useLayout: false,
             },
             {
                 route: '/login',
                 title: 'Authorisation',
-                filePAthTemplate: '/templates/login.html',
+                filePAthTemplate: '/templates/pages/auth/login.html',
                 useLayout: false,
                 load: () => {
                     document.body.classList.add('login-page');
@@ -45,7 +46,7 @@ export class Router {
             {
                 route: '/signup',
                 title: 'Registration',
-                filePAthTemplate: '/templates/signup.html',
+                filePAthTemplate: '/templates/pages/auth/signup.html',
                 useLayout: false,
                 load: () => {
                     document.body.classList.add('register-page');
@@ -64,9 +65,16 @@ export class Router {
                 new Logout(this.openNewRoute.bind(this));
         }
             },
+            {
+                route: '/freelancers',
+                title: 'Freelancers',
+                filePAthTemplate: '/templates/pages/freelancers/list.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new FreelancersList(this.openNewRoute.bind(this));
+                },
+            },
         ];
-
-
     };
 
     initEvents() {

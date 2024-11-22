@@ -1,5 +1,5 @@
-import {AuthUtils} from "../utils/auth-utils.js";
-import {HttpUtils} from "../utils/http-utils.js";
+import {AuthUtils} from "../../utils/auth-utils.js";
+import {HttpUtils} from "../../utils/http-utils.js";
 
 export class Signup {
     constructor(openNewRoute) {
@@ -70,7 +70,8 @@ export class Signup {
         this.commonErrorElement.style.display = 'none';
         if (this.validateForms()) {
             //request
-            const result = await HttpUtils.request('/signup', 'POST', {
+            const result = await HttpUtils
+                .request('/signup', 'POST', false, {
                 name: this.nameElement.value,
                 lastName: this.lastNameElement.value,
                 email: this.emailElement.value,

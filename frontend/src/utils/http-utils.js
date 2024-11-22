@@ -1,11 +1,11 @@
 import config from "../config/config.js";
+import {AuthUtils} from "./auth-utils.js";
 
 export class HttpUtils {
-    static async request(url, method = "GET", body = null) {
+    static async request(url, method = "GET", useAuth = true, body = null) {
         const result = {
             error: false,
             response: null,
-
         }
 
         const params = {
@@ -15,6 +15,14 @@ export class HttpUtils {
                 'Accept': 'application/json',
             },
         };
+
+        let token = null;
+        if (useAuth) {
+            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
+            if (token) {
+                params.headers['authorization'] = token;
+            }
+        }
 
         if (body) {
             params.body = JSON.stringify(body);
@@ -31,6 +39,21 @@ export class HttpUtils {
 
         if (response.status < 200 || response.status > 299) {
             result.error = true;
+            if (useAuth && response.status === 401) {
+                //1 - токена нет
+                if (!token) {
+                    result.redirect = '/login';
+                } else {
+                    //2 - токен устарел/не валиден (надо обновить)
+                    const updateTokenResult = await AuthUtils.updateRefreshToken();
+                    if (updateTokenResult) {
+                        // запрос повторно
+                        return this.request(url, method, useAuth, body);
+                    } else {
+                        result.redirect = '/login';
+                    }
+                }
+            }
         }
         return result;
     }

@@ -1,5 +1,5 @@
-import {AuthUtils} from "../utils/auth-utils.js";
-import {HttpUtils} from "../utils/http-utils.js";
+import {AuthUtils} from "../../utils/auth-utils.js";
+import {HttpUtils} from "../../utils/http-utils.js";
 
 export class Login {
     constructor(openNewRoute) {
@@ -41,7 +41,8 @@ export class Login {
         if (this.validateForms()) {
             //request
 
-            const result = await HttpUtils.request('/login', 'POST', {
+            const result = await HttpUtils
+                .request('/login', 'POST', false, {
                 email: this.emailElement.value,
                 password: this.passwordElement.value,
                 rememberMe: this.rememberMeElement.checked,
@@ -53,7 +54,10 @@ export class Login {
                 return;
             }
 
-            AuthUtils.setAuthInfo(result.response.accessToken, result.response.refreshToken, {id: result.response.id, name: result.response.name});
+            AuthUtils.setAuthInfo(result.response.accessToken, result.response.refreshToken, {
+                id: result.response.id,
+                name: result.response.name
+            });
             // window.location.href = '/';
             this.openNewRoute('/');
         }
