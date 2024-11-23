@@ -3,12 +3,14 @@ import {Login} from "./components/auth/login.js";
 import {Signup} from "./components/auth/signup.js";
 import {Logout} from "./components/auth/logout.js";
 import {FreelancersList} from "./components/freelancers/freelancers-list.js";
+import {FileUtils} from "./utils/file-utils.js";
 
 export class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title-page');
         this.contentPageElement = document.getElementById('content');
         this.adminStyleElement = document.getElementById('adminlte_style');
+        // this.adminScriptElement = document.getElementById('adminlte_script');
 
         this.initEvents();
         this.routes = [
@@ -73,6 +75,8 @@ export class Router {
                 load: () => {
                     new FreelancersList(this.openNewRoute.bind(this));
                 },
+                styles: ['dataTables.bootstrap4.min.css'],
+                scripts: ['jquery.dataTables.min.js', 'dataTables.bootstrap4.min.js'],
             },
         ];
     };
@@ -102,8 +106,9 @@ export class Router {
         if (element) {
             e.preventDefault();
 
+            const currentRoute = window.location.pathname;
             const url = element.href.replace(window.location.origin, '');
-            if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
+            if (!url || (currentRoute === url.replace('#', '')) || url.startsWith('javascript:void(0)')) {
                 return;
             }
             await this.openNewRoute(url);
@@ -118,6 +123,11 @@ export class Router {
                     document.querySelector(`link[href='/css/${style}']`).remove();
                 });
             }
+            if(currentRoute.scripts && currentRoute.scripts.length > 0) {
+                currentRoute.scripts.forEach(script => {
+                    document.querySelector(`script[src='/js/${script}']`).remove();
+                });
+            }
             if (oldRoute.unload && typeof oldRoute.unload === 'function') {
                 oldRoute.unload();
             }
@@ -129,11 +139,13 @@ export class Router {
         if (newRoute) {
             if(newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = `/css/${style}`;
-                    document.head.insertBefore(link, this.adminStyleElement);
+                    FileUtils.loadPageStyle(`/css/${style}`, this.adminStyleElement);
                 });
+            }
+            if(newRoute.scripts && newRoute.scripts.length > 0) {
+                for (const script of newRoute.scripts) {
+                    await FileUtils.loadPageScript(`/js/${script}`);
+                }
             }
             if (newRoute.title) {
                 this.titlePageElement.innerText = `${newRoute.title} | FL Studio`;
