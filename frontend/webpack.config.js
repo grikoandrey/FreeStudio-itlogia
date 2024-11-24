@@ -8,6 +8,7 @@ module.exports = {
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
     },
     devServer: {
         static: {
@@ -34,8 +35,9 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-        template: './index.html',
-    }),
+            template: './index.html',
+            // baseUrl: '/',
+        }),
         new CopyPlugin({
             patterns: [
                 {from: "./src/templates", to: "templates"},
@@ -50,6 +52,7 @@ module.exports = {
                 {from: "./node_modules/admin-lte/dist/js/adminlte.min.js", to: "js"},
                 {from: "./node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js", to: "js"},
                 {from: "./node_modules/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js", to: "js"},
+                {from: "./node_modules/admin-lte/plugins/bs-custom-file-input/bs-custom-file-input.min.js", to: "js"},
 
             ],
         }),
