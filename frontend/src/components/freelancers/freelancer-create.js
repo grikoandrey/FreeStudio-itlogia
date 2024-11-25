@@ -13,7 +13,7 @@ export class FreelancerCreate {
         this.nameInputElement = document.getElementById('inputName');
         this.lastNameInputElement = document.getElementById('inputLastName');
         this.emailInputElement = document.getElementById('inputEmail');
-        this.educaionInputElement = document.getElementById('inputEducation');
+        this.educationInputElement = document.getElementById('inputEducation');
         this.locationInputElement = document.getElementById('inputLocation');
         this.skillsInputElement = document.getElementById('inputSkills');
         this.infoInputElement = document.getElementById('inputInfo');
@@ -27,7 +27,7 @@ export class FreelancerCreate {
         let textInputArray = [
             this.nameInputElement,
             this.lastNameInputElement,
-            this.educaionInputElement,
+            this.educationInputElement,
             this.locationInputElement,
             this.skillsInputElement,
             this.infoInputElement,
@@ -61,7 +61,7 @@ export class FreelancerCreate {
                 lastName: this.lastNameInputElement.value,
                 email: this.emailInputElement.value,
                 level: this.levelSelectElement.value,
-                education: this.educaionInputElement.value,
+                education: this.educationInputElement.value,
                 location: this.locationInputElement.value,
                 skills: this.skillsInputElement.value,
                 info: this.infoInputElement.value,

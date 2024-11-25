@@ -1,0 +1,146 @@
+<div class="freelancer-edit">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Edit of freelancer</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/freelancers">Freelancers</a></li>
+                        <li class="breadcrumb-item"><a href="/" id="breadcrumbs-freelancer"></a></li>
+                        <li class="breadcrumb-item active">Edit profile</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+
+                    <!-- Profile Image -->
+                    <div class="card card-primary card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle" id="avatar"
+                                     src="" alt="User profile picture">
+                            </div>
+
+                            <p class="text-muted text-center">Freelancer</p>
+
+                            <p class="text-muted text-center level" id="level"></p>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col-md-9">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Freelancer editing</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputName">Name</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="inputName" class="form-control" placeholder="Name">
+                                    <span id="inputName-error" class="error invalid-feedback">Please enter Name</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputLastName">Last Name</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="inputLastName" class="form-control" placeholder="lastName">
+                                    <span id="inputLastName-error" class="error invalid-feedback">Please enter Lastname</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputEmail">Last Name</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="email" id="inputEmail" class="form-control" placeholder="email">
+                                    <span id="inputEmail-error" class="error invalid-feedback">Please enter correct email</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputEducation">Education</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="inputEducation" class="form-control" placeholder="education">
+                                    <span id="inputEducation-error" class="error invalid-feedback">Please enter data</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputLocation">Location</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="inputLocation" class="form-control" placeholder="location">
+                                    <span id="inputLocation-error" class="error invalid-feedback">Please enter location</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputSkills">Skills</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="inputSkills" class="form-control" placeholder="skills">
+                                    <span id="inputSkills-error" class="error invalid-feedback">Please enter skills</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputInfo">Information</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <textarea id="inputInfo" class="form-control" placeholder="enter info"></textarea>
+                                    <span id="inputInfo-error" class="error invalid-feedback">Please enter data</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="selectLevel">Level</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <select id="selectLevel" class="form-control">
+                                        <option value="junior" selected>Junior</option>
+                                        <option value="middle">Middle</option>
+                                        <option value="senior">Senior</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="inputAvatar">New Photo</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputAvatar">
+                                        <label class="custom-file-label" for="inputAvatar">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="offset-sm-3 col-sm-9">
+                                    <button type="button" class="btn btn-danger" id="updateButton">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
