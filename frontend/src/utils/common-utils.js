@@ -20,23 +20,38 @@ export class CommonUtils {
     };
 
     static getStatusInfo(status) {
-        let statusHtml;
+        const info = {
+            name: '',
+            color: '',
+            icon: '',
+        };
+
         switch (status) {
             case config.orderStatuses.new:
-                statusHtml = '<span class="badge badge-secondary">New</span>';
+                info.name = 'New';
+                info.color = 'secondary';
+                info.icon = 'star';
                 break;
             case config.orderStatuses.confirmed:
-                statusHtml = '<span class="badge badge-warning">Confirmed</span>';
+                info.name = 'Confirmed';
+                info.color = 'warning';
+                info.icon = 'eye';
                 break;
             case config.orderStatuses.success:
-                statusHtml = '<span class="badge badge-success">Completed</span>';
+                info.name = 'Completed';
+                info.color = 'success';
+                info.icon = 'check';
                 break;
             case config.orderStatuses.canceled:
-                statusHtml = '<span class="badge badge-danger">Canceled</span>';
+                info.name = 'Canceled';
+                info.color = 'danger';
+                info.icon = 'times';
                 break;
             default:
-                statusHtml = '<span class="badge badge-secondary">Unknown</span>';
+                info.name = 'Unknown';
+                info.color = 'secondary';
+                info.icon = 'times';
         }
-        return statusHtml;
+        return info;
 }
 }
