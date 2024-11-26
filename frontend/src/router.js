@@ -8,6 +8,7 @@ import {FreelancerView} from "./components/freelancers/freelancer-view.js";
 import {FreelancerCreate} from "./components/freelancers/freelancer-create.js";
 import {FreelancerEdit} from "./components/freelancers/freelancer-edit.js";
 import {FreelancerDelete} from "./components/freelancers/freelancer-delete.js";
+import {OrdersList} from "./components/orders/orders-list.js";
 
 export class Router {
     constructor() {
@@ -116,6 +117,18 @@ export class Router {
                 load: () => {
                     new FreelancerDelete(this.openNewRoute.bind(this));
                 },
+            },
+
+            {
+                route: '/orders',
+                title: 'Orders',
+                filePAthTemplate: '/templates/pages/orders/list.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new OrdersList(this.openNewRoute.bind(this));
+                },
+                styles: ['dataTables.bootstrap4.min.css'],
+                scripts: ['jquery.dataTables.min.js', 'dataTables.bootstrap4.min.js'],
             },
         ];
     };
