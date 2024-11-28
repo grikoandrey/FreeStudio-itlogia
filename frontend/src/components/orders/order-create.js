@@ -1,5 +1,4 @@
 import {HttpUtils} from "../../utils/http-utils.js";
-import {FileUtils} from "../../utils/file-utils.js";
 
 export class OrderCreate {
     constructor(openNewRoute) {
@@ -57,9 +56,8 @@ export class OrderCreate {
         this.statusSelectElement = document.getElementById('selectStatus');
         this.descriptionInputElement = document.getElementById('inputDescription');
         this.amountInputElement = document.getElementById('inputAmount');
-
         this.scheduledCardElement = document.getElementById('scheduled-card');
-        this.completeCardElement = document.getElementById('complete-card');
+        // this.completeCardElement = document.getElementById('complete-card');
         this.deadlineCardElement = document.getElementById('deadline-card');
 
         this.getFreelancers().then();
@@ -117,7 +115,6 @@ export class OrderCreate {
             this.deadlineCardElement.classList.add('is-invalid');
             isValid = false;
         }
-
         return isValid;
     };
 

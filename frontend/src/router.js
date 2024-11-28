@@ -11,6 +11,8 @@ import {FreelancerDelete} from "./components/freelancers/freelancer-delete.js";
 import {OrdersList} from "./components/orders/orders-list.js";
 import {OrderView} from "./components/orders/order-view.js";
 import {OrderCreate} from "./components/orders/order-create.js";
+import {OrderEdit} from "./components/orders/order-edit.js";
+import {OrderDelete} from "./components/orders/order-delete.js";
 
 export class Router {
     constructor() {
@@ -160,6 +162,32 @@ export class Router {
                     'select2.full.min.js',
                 ],
             },
+            {
+                route: '/orders/edit',
+                title: 'Edit order',
+                filePAthTemplate: '/templates/pages/orders/edit.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new OrderEdit(this.openNewRoute.bind(this));
+                },
+                styles: [
+                    'tempusdominus-bootstrap-4.min.css',
+                    'select2.min.css',
+                    'select2-bootstrap4.min.css',
+                ],
+                scripts: [
+                    'moment.min.js',
+                    // 'moment-ru-locale.js',
+                    'tempusdominus-bootstrap-4.min.js',
+                    'select2.full.min.js',
+                ],
+            },
+            {
+                route: '/orders/delete',
+                load: () => {
+                    new OrderDelete(this.openNewRoute.bind(this));
+                },
+            },
         ];
     };
 
@@ -253,7 +281,7 @@ export class Router {
         } else {
             alert('No route found.');
             history.pushState(null, '', '/404');
-            await this.activateRoute();
+            await this.activateRoute;
         }
     };
 }
