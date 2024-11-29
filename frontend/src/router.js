@@ -13,6 +13,7 @@ import {OrderView} from "./components/orders/order-view.js";
 import {OrderCreate} from "./components/orders/order-create.js";
 import {OrderEdit} from "./components/orders/order-edit.js";
 import {OrderDelete} from "./components/orders/order-delete.js";
+import {AuthUtils} from "./utils/auth-utils.js";
 
 export class Router {
     constructor() {
@@ -20,6 +21,7 @@ export class Router {
         this.contentPageElement = document.getElementById('content');
         this.adminStyleElement = document.getElementById('adminlte_style');
         // this.adminScriptElement = document.getElementById('adminlte_script');
+        this.userName = null;
 
         this.initEvents();
         this.routes = [
@@ -275,6 +277,19 @@ export class Router {
                     contentBlock = document.getElementById('content-layout');
                     document.body.classList.add('sidebar-mini');
                     document.body.classList.add('layout-fixed');
+
+                    this.profileNameElement = document.getElementById('profileName');
+                    if (!this.userName) {
+                        let userInfo = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
+                        if (userInfo) {
+                            userInfo = JSON.parse(userInfo);
+                            if (userInfo.name) {
+                                this.userName = userInfo.name;
+                            }
+                        }
+                    }
+                    this.profileNameElement.innerText = this.userName;
+
                     this.activateMenuItem(newRoute);
                 } else {
                     document.body.classList.remove('sidebar-mini');
@@ -292,6 +307,7 @@ export class Router {
             await this.activateRoute;
         }
     };
+
     activateMenuItem(route) {
         document.querySelectorAll('.sidebar .nav-link').forEach(link => {
             const href = link.getAttribute('href');
