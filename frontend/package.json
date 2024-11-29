@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npx webpack",
-    "dev": "npx webpack serve --open"
+    "dev": "npx webpack serve --open",
+    "http-server": "http-server ./dist --proxy http://127.0.0.1:8080?",
+    "live-server": "live-server ./dist --entry-file=index.hml"
   },
   "author": "Andrey Griko",
   "license": "ISC",
@@ -13,7 +15,9 @@
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.3",
+    "http-server": "^14.1.1",
     "husky": "^9.1.6",
+    "live-server": "^1.2.2",
     "sass": "^1.81.0",
     "sass-loader": "^16.0.3",
     "style-loader": "^4.0.0",
@@ -22,6 +26,7 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
-    "admin-lte": "3.2"
+    "admin-lte": "3.2",
+    "dotenv": "^16.4.5"
   }
 }

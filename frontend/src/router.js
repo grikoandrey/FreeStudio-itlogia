@@ -29,8 +29,15 @@ export class Router {
                 filePAthTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    new Dashboard();
+                    new Dashboard(this.openNewRoute.bind(this));
                 },
+                styles: ['fullcalendar.css'],
+                scripts: [
+                    'moment.min.js',
+                    // 'moment-ru-locale.js',
+                    'fullcalendar.js',
+                    'fullcalendar-locale-ru.js',
+                ],
             },
             {
                 route: '/404',
@@ -73,8 +80,8 @@ export class Router {
             {
                 route: '/logout',
                 load: () => {
-                new Logout(this.openNewRoute.bind(this));
-        }
+                    new Logout(this.openNewRoute.bind(this));
+                }
             },
             {
                 route: '/freelancers',
@@ -207,7 +214,7 @@ export class Router {
     async clickHandler(e) {
 
         let element = null;
-        if(e.target.nodeName === 'A') {
+        if (e.target.nodeName === 'A') {
             element = e.target;
         } else if (e.target.parentNode.nodeName === 'A') {
             element = e.target.parentNode;
@@ -228,12 +235,12 @@ export class Router {
     async activateRoute(e, oldRoute = null) {
         if (oldRoute) {
             const currentRoute = this.routes.find(item => item.route === oldRoute);
-            if(currentRoute.styles && currentRoute.styles.length > 0) {
+            if (currentRoute.styles && currentRoute.styles.length > 0) {
                 currentRoute.styles.forEach(style => {
                     document.querySelector(`link[href='/css/${style}']`).remove();
                 });
             }
-            if(currentRoute.scripts && currentRoute.scripts.length > 0) {
+            if (currentRoute.scripts && currentRoute.scripts.length > 0) {
                 currentRoute.scripts.forEach(script => {
                     document.querySelector(`script[src='/js/${script}']`).remove();
                 });
@@ -247,12 +254,12 @@ export class Router {
         const newRoute = this.routes.find(item => item.route === urlRoute);
 
         if (newRoute) {
-            if(newRoute.styles && newRoute.styles.length > 0) {
+            if (newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
                     FileUtils.loadPageStyle(`/css/${style}`, this.adminStyleElement);
                 });
             }
-            if(newRoute.scripts && newRoute.scripts.length > 0) {
+            if (newRoute.scripts && newRoute.scripts.length > 0) {
                 for (const script of newRoute.scripts) {
                     await FileUtils.loadPageScript(`/js/${script}`);
                 }
@@ -268,6 +275,7 @@ export class Router {
                     contentBlock = document.getElementById('content-layout');
                     document.body.classList.add('sidebar-mini');
                     document.body.classList.add('layout-fixed');
+                    this.activateMenuItem(newRoute);
                 } else {
                     document.body.classList.remove('sidebar-mini');
                     document.body.classList.remove('layout-fixed');
@@ -284,4 +292,14 @@ export class Router {
             await this.activateRoute;
         }
     };
+    activateMenuItem(route) {
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            const href = link.getAttribute('href');
+            if ((route.route.includes(href) && href !== '/') || (route.route === '/' && href === '/')) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        })
+    }
 }
