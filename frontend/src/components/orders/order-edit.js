@@ -1,11 +1,12 @@
 import {HttpUtils} from "../../utils/http-utils.js";
+import {ValidationUtils} from "../../utils/validation-utils.js";
+import {UrlUtils} from "../../utils/url-utils.js";
 
 export class OrderEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id');
         if (!id) {
             return this.openNewRoute('/');
         }
@@ -17,15 +18,21 @@ export class OrderEdit {
         this.deadlineDate = null;
         this.completeDate = null;
 
+        this.findElements();
+
+        this.validations = [
+            {element: this.descriptionInputElement},
+            {element: this.amountInputElement},
+        ];
+
+        this.init(id).then();
+    };
+
+    findElements() {
         this.freelancerSelectElement = document.getElementById('selectFreelancer');
         this.statusSelectElement = document.getElementById('selectStatus');
         this.descriptionInputElement = document.getElementById('inputDescription');
         this.amountInputElement = document.getElementById('inputAmount');
-        // this.scheduledCardElement = document.getElementById('scheduled-card');
-        // this.completeCardElement = document.getElementById('complete-card');
-        // this.deadlineCardElement = document.getElementById('deadline-card');
-
-        this.init(id).then();
     };
 
     async init(id) {
@@ -96,33 +103,32 @@ export class OrderEdit {
             }
         }
 
-        const calendarScheduled = $('#calendar-scheduled');
-        const calendarDeadline = $('#calendar-deadline');
-        const calendarComplete = $('#calendar-complete');
-
-        calendarScheduled.datetimepicker({
+        const calendarOptions = {
             inline: true,
             // locale: 'ru',
             icons: {
                 time: 'far fa-clock',
             },
             useCurrent: false,
-            date: order.scheduledDate,
-        });
+        };
+
+        const calendarScheduled = $('#calendar-scheduled');
+        const calendarDeadline = $('#calendar-deadline');
+        const calendarComplete = $('#calendar-complete');
+
+        calendarScheduled.datetimepicker(Object.assign({}, calendarOptions, {date: order.scheduledDate}));
         calendarScheduled.on("change.datetimepicker", (e) => {
             this.scheduledDate = e.date
         });
-        $('#calendar-complete').datetimepicker({
-            inline: true,
-            icons: {
-                time: 'far fa-clock',
-            },
-            useCurrent: false,
-            date: order.completeDate,
-            buttons: {
-                showClear: true,
-            }
+        calendarDeadline.datetimepicker(Object.assign({}, calendarOptions, {date: order.deadlineDate}));
+        calendarDeadline.on("change.datetimepicker", (e) => {
+            this.deadlineDate = e.date
         });
+
+        calendarComplete.datetimepicker(Object.assign({}, calendarOptions, {
+            date: order.completeDate,
+            buttons: {showClear: true,}
+        }));
         calendarComplete.on("change.datetimepicker", (e) => {
 
             if (e.date) {
@@ -133,42 +139,12 @@ export class OrderEdit {
                 this.completeDate = null;
             }
         });
-        $('#calendar-deadline').datetimepicker({
-            inline: true,
-            icons: {
-                time: 'far fa-clock',
-            },
-            useCurrent: false,
-            date: order.deadlineDate,
-        });
-        calendarDeadline.on("change.datetimepicker", (e) => {
-            this.deadlineDate = e.date
-        });
-    };
-
-    validateForms() {
-        let isValid = true;
-
-        let textInputArray = [
-            this.descriptionInputElement,
-            this.amountInputElement,
-        ];
-
-        for (let i = 0; i < textInputArray.length; i++) {
-            if (textInputArray[i].value) {
-                textInputArray[i].classList.remove('is-invalid');
-            } else {
-                textInputArray[i].classList.add('is-invalid');
-                isValid = false;
-            }
-        }
-        return isValid;
     };
 
     async updateOrder(e) {
         e.preventDefault();
 
-        if (this.validateForms()) {
+        if (ValidationUtils.validateForm(this.validations)) {
             const changedData = {};
             if (parseInt(this.amountInputElement.value) !== parseInt(this.orderOriginalData.amount)) {
                 changedData.amount = parseInt(this.amountInputElement.value);
@@ -184,7 +160,7 @@ export class OrderEdit {
             }
 
             if (this.completeDate || (!this.completeDate && this.completeDate === false)) {
-                changedData.completeDate = this.completeDate ? this.completeDate.toISOString(): null;
+                changedData.completeDate = this.completeDate ? this.completeDate.toISOString() : null;
             }
             if (this.scheduledDate) {
                 changedData.scheduledDate = this.scheduledDate.toISOString();

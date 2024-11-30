@@ -26,6 +26,8 @@ export class OrdersList {
         // console.log(freelancers);
         const recordsElement = document.getElementById('records');
         for (let i = 0; i < orders.length; i++) {
+            const statusInfo = CommonUtils.getStatusInfo(orders[i].status);
+
             const trElement = document.createElement('tr');
             trElement.insertCell().innerText = orders[i].number;
             trElement.insertCell().innerText = `${orders[i].owner.name} ${orders[i].owner.lastName}`;
@@ -34,17 +36,11 @@ export class OrdersList {
                 .toLocaleString('ru-RU');
             trElement.insertCell().innerText = (new Date(orders[i].deadlineDate))
                 .toLocaleString('ru-RU');
-
-            const statusInfo = CommonUtils.getStatusInfo(orders[i].status);
             trElement.insertCell().innerHTML = `<span class="badge badge-${statusInfo.color}">${statusInfo.name}</span>`;
 
             trElement.insertCell().innerText = orders[i].completeDate ? (new Date(orders[i].completeDate))
                 .toLocaleString('ru-RU') : '';
-            trElement.insertCell().innerHTML = `<div class="orders-tools">
-                    <a href="/orders/view?id=${orders[i].id}" class="fas fa-eye"></a>
-                    <a href="/orders/edit?id=${orders[i].id}" class="fas fa-edit"></a>
-                    <a href="/orders/delete?id=${orders[i].id}" class="fas fa-trash"></a>
-                    </div>`;
+            trElement.insertCell().innerHTML = CommonUtils.generateGridToolsColum('orders', orders[i].id);
 
             recordsElement.appendChild(trElement);
         }

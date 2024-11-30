@@ -1,5 +1,6 @@
 import {AuthUtils} from "../../utils/auth-utils.js";
 import {HttpUtils} from "../../utils/http-utils.js";
+import {ValidationUtils} from "../../utils/validation-utils.js";
 
 export class Signup {
     constructor(openNewRoute) {
@@ -9,6 +10,22 @@ export class Signup {
             return this.openNewRoute('/');
         }
 
+        this.findElements();
+
+        this.validations = [
+            {element: this.nameElement, options: {pattern: /^[A-Z][a-z]*$/}},
+            {element: this.lastNameElement, options: {pattern: /^[A-Z][a-z]*$/}},
+            {element: this.emailElement, options: {pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/}},
+            {element: this.passwordElement, options: {pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$/}},
+            {element: this.rePasswordElement, options: {compareTo: this.passwordElement.value}},
+            {element: this.agreeElement, options: {checked: true}},
+
+        ];
+
+        document.getElementById('process-button').addEventListener('click', this.signup.bind(this));
+    };
+
+    findElements() {
         this.nameElement = document.getElementById('name');
         this.lastNameElement = document.getElementById('lastName');
         this.emailElement = document.getElementById('email');
@@ -16,59 +33,16 @@ export class Signup {
         this.rePasswordElement = document.getElementById('rePassword');
         this.agreeElement = document.getElementById('agree');
         this.commonErrorElement = document.getElementById('common-error');
-
-        document.getElementById('process-button').addEventListener('click', this.signup.bind(this));
-    };
-
-    validateForms() {
-        let isValid = true;
-
-        if (this.nameElement.value && this.nameElement.value.match(/^[a-z]+\s*$/i)) {
-            this.nameElement.classList.remove('is-invalid');
-        } else {
-            this.nameElement.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        if (this.lastNameElement.value && this.nameElement.value.match(/^[a-z]+\s*$/i)) {
-            this.lastNameElement.classList.remove('is-invalid');
-        } else {
-            this.lastNameElement.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        if (this.emailElement.value && this.emailElement.value
-            .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-            this.emailElement.classList.remove('is-invalid');
-        } else {
-            this.emailElement.classList.add('is-invalid');
-            isValid = false;
-        }
-        if (this.passwordElement.value && this.passwordElement.value
-            .match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)) {
-            this.passwordElement.classList.remove('is-invalid');
-        } else {
-            this.passwordElement.classList.add('is-invalid');
-            isValid = false;
-        }
-        if (this.rePasswordElement.value && this.rePasswordElement.value === this.passwordElement.value) {
-            this.rePasswordElement.classList.remove('is-invalid');
-        } else {
-            this.rePasswordElement.classList.add('is-invalid');
-            isValid = false;
-        }
-        if (this.agreeElement.checked) {
-            this.agreeElement.classList.remove('is-invalid');
-        } else {
-            this.agreeElement.classList.add('is-invalid');
-            isValid = false;
-        }
-        return isValid;
-    };
+    }
 
     async signup() {
         this.commonErrorElement.style.display = 'none';
-        if (this.validateForms()) {
+        for (let i = 0; i < this.validations.length; i++) {
+            if (this.validations[i].element === this.rePasswordElement) {
+                this.validations[i].options.compareTo = this.passwordElement.value;
+            }
+        }
+        if (ValidationUtils.validateForm(this.validations)) {
             //request
             const result = await HttpUtils
                 .request('/signup', 'POST', false, {

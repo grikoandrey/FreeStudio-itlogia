@@ -1,5 +1,6 @@
 import {HttpUtils} from "../../utils/http-utils.js";
 import {FileUtils} from "../../utils/file-utils.js";
+import {ValidationUtils} from "../../utils/validation-utils.js";
 
 export class FreelancerCreate {
     constructor(openNewRoute) {
@@ -10,6 +11,23 @@ export class FreelancerCreate {
 
         bsCustomFileInput.init();
 
+        this.findElements();
+
+        this.validations = [
+            {element: this.nameInputElement},
+            {element: this.lastNameInputElement},
+            {element: this.educationInputElement},
+            {element: this.locationInputElement},
+            {element: this.skillsInputElement},
+            {element: this.infoInputElement},
+            {
+                element: this.emailInputElement,
+                options: {pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/}
+            },
+        ];
+    };
+
+    findElements() {
         this.nameInputElement = document.getElementById('inputName');
         this.lastNameInputElement = document.getElementById('inputLastName');
         this.emailInputElement = document.getElementById('inputEmail');
@@ -19,43 +37,12 @@ export class FreelancerCreate {
         this.infoInputElement = document.getElementById('inputInfo');
         this.levelSelectElement = document.getElementById('selectLevel');
         this.avatarInputElement = document.getElementById('inputAvatar');
-    };
-
-    validateForms() {
-        let isValid = true;
-
-        let textInputArray = [
-            this.nameInputElement,
-            this.lastNameInputElement,
-            this.educationInputElement,
-            this.locationInputElement,
-            this.skillsInputElement,
-            this.infoInputElement,
-        ];
-
-        for (let i = 0; i < textInputArray.length; i++) {
-            if (textInputArray[i].value) {
-                textInputArray[i].classList.remove('is-invalid');
-            } else {
-                textInputArray[i].classList.add('is-invalid');
-                isValid = false;
-            }
-        }
-
-        if (this.emailInputElement.value && this.emailInputElement.value
-            .match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailInputElement.classList.remove('is-invalid');
-        } else {
-            this.emailInputElement.classList.add('is-invalid');
-            isValid = false;
-        }
-        return isValid;
-    };
+    }
 
     async saveFreelancer(e) {
         e.preventDefault();
 
-        if (this.validateForms()) {
+        if (ValidationUtils.validateForm(this.validations)) {
             const createData = {
                 name: this.nameInputElement.value,
                 lastName: this.lastNameInputElement.value,

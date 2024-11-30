@@ -36,11 +36,7 @@ export class FreelancersList {
             trElement.insertCell().innerText = freelancers[i].education;
             trElement.insertCell().innerText = freelancers[i].location;
             trElement.insertCell().innerText = freelancers[i].skills;
-            trElement.insertCell().innerHTML = `<div class="freelancers-tools">
-                    <a href="/freelancers/view?id=${freelancers[i].id}" class="fas fa-eye"></a>
-                    <a href="/freelancers/edit?id=${freelancers[i].id}" class="fas fa-edit"></a>
-                    <a href="/freelancers/delete?id=${freelancers[i].id}" class="fas fa-trash"></a>
-                    </div>`;
+            trElement.insertCell().innerHTML = CommonUtils.generateGridToolsColum('freelancers', freelancers[i].id);
 
             recordsElement.appendChild(trElement);
         }

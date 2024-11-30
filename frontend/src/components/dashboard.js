@@ -43,42 +43,39 @@ export class Dashboard {
             }
 
             if (orders[i].scheduledDate) {
-                const scheduledDate = new Date(orders[i].scheduledDate);
                 preparedEvents.push({
                     title          : `${orders[i].freelancer.name} ${orders[i].freelancer.lastName} makes order ${orders[i].number}`,
-                    start          : scheduledDate,
+                    start          : new Date(orders[i].scheduledDate),
                     backgroundColor: '#00c0ef', //Info (aqua)
                     borderColor    : '#00c0ef', //Info (aqua)
                     allDay         : true
                 });
             }
             if (orders[i].deadlineDate) {
-                const deadlineDate = new Date(orders[i].deadlineDate);
+
                 preparedEvents.push({
                     title          : `Order deadline ${orders[i].number}`,
-                    start          : deadlineDate,
+                    start          : new Date(orders[i].deadlineDate),
                     backgroundColor: color ? color : '#f39c12', //yellow
                     borderColor    : color ? color : '#f39c12', //yellow
                     allDay         : true
                 });
             }
             if (orders[i].completeDate) {
-                const completeDate = new Date(orders[i].completeDate);
                 preparedEvents.push({
                     title          : `Order ${orders[i].number} was completed by freelancer ${orders[i].freelancer.name} ${orders[i].freelancer.lastName}`,
-                    start          : completeDate,
+                    start          : new Date(orders[i].completeDate),
                     backgroundColor: '#00a65a', //Success (green)
                     borderColor    : '#00a65a', //Success (green)
                     allDay         : true
                 });
             }
             if (orders[i].status && orders[i].status === 'canceled') {
-                const scheduledDate = new Date(orders[i].scheduledDate);
                 preparedEvents.push({
                     title          : `Order ${orders[i].number} was canceled`,
-                    start          : scheduledDate,
-                    backgroundColor: color ? color : '#f56954', //red
-                    borderColor    : color ? color : '#f56954', //red
+                    start          : new Date(orders[i].scheduledDate),
+                    backgroundColor: '#f56954', //red
+                    borderColor    : '#f56954', //red
                     allDay         : true
                 });
             }
@@ -89,9 +86,7 @@ export class Dashboard {
         //     m    = date.getMonth(),
         //     y    = date.getFullYear()
 
-        const calendarElement = document.getElementById('calendar');
-
-        const calendar = new FullCalendar.Calendar(calendarElement, {
+        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             headerToolbar: {
                 left  : 'prev,next today',
                 center: 'title',

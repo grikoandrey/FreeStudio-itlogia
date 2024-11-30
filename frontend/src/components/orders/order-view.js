@@ -1,13 +1,13 @@
 import {HttpUtils} from "../../utils/http-utils.js";
 import config from "../../config/config.js";
 import {CommonUtils} from "../../utils/common-utils.js";
+import {UrlUtils} from "../../utils/url-utils";
 
 export class OrderView {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id');
         if (!id) {
             return this.openNewRoute('/');
         }

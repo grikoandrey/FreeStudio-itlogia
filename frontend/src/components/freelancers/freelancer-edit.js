@@ -2,13 +2,13 @@ import {HttpUtils} from "../../utils/http-utils.js";
 import config from "../../config/config.js";
 import {CommonUtils} from "../../utils/common-utils.js";
 import {FileUtils} from "../../utils/file-utils.js";
+import {ValidationUtils} from "../../utils/validation-utils.js";
+import {UrlUtils} from "../../utils/url-utils.js";
 
 export class FreelancerEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id');
         if (!id) {
             return this.openNewRoute('/');
         }
@@ -18,6 +18,25 @@ export class FreelancerEdit {
 
         bsCustomFileInput.init();
 
+        this.findElements();
+
+        this.validations = [
+            {element: this.nameInputElement},
+            {element: this.lastNameInputElement},
+            {element: this.educationInputElement},
+            {element: this.locationInputElement},
+            {element: this.skillsInputElement},
+            {element: this.infoInputElement},
+            {
+                element: this.emailInputElement,
+                options: {pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/}
+            },
+        ];
+
+        this.getFreelancer(id).then();
+    };
+
+    findElements() {
         this.nameInputElement = document.getElementById('inputName');
         this.lastNameInputElement = document.getElementById('inputLastName');
         this.emailInputElement = document.getElementById('inputEmail');
@@ -27,9 +46,7 @@ export class FreelancerEdit {
         this.infoInputElement = document.getElementById('inputInfo');
         this.levelSelectElement = document.getElementById('selectLevel');
         this.avatarInputElement = document.getElementById('inputAvatar');
-
-        this.getFreelancer(id).then();
-    };
+    }
 
     async getFreelancer(id) {
         const result = await HttpUtils.request(`/freelancers/${id}`);
@@ -72,42 +89,10 @@ export class FreelancerEdit {
         }
     };
 
-    validateForms() {
-        let isValid = true;
-
-        let textInputArray = [
-            this.nameInputElement,
-            this.lastNameInputElement,
-            this.educationInputElement,
-            this.locationInputElement,
-            this.skillsInputElement,
-            this.infoInputElement,
-        ];
-
-        for (let i = 0; i < textInputArray.length; i++) {
-            if (textInputArray[i].value) {
-                textInputArray[i].classList.remove('is-invalid');
-            } else {
-                textInputArray[i].classList.add('is-invalid');
-                isValid = false;
-            }
-        }
-
-        if (this.emailInputElement.value && this.emailInputElement.value
-            .match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailInputElement.classList.remove('is-invalid');
-        } else {
-            this.emailInputElement.classList.add('is-invalid');
-            isValid = false;
-        }
-        return isValid;
-    };
-
     async updateFreelancer(e) {
         e.preventDefault();
 
-        if (this.validateForms()) {
-
+        if (ValidationUtils.validateForm(this.validations)) {
             const changedData = {};
             if (this.nameInputElement.value !== this.freelancerOriginalData.name) {
                 changedData.name = this.nameInputElement.value;
