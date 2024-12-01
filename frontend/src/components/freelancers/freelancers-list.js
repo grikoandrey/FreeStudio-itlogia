@@ -1,6 +1,6 @@
-import {HttpUtils} from "../../utils/http-utils";
 import config from "../../config/config.js";
 import {CommonUtils} from "../../utils/common-utils.js";
+import {FreelancersService} from "../../services/freelancers-service.js";
 
 export class FreelancersList {
     constructor(openNewRoute) {
@@ -10,17 +10,14 @@ export class FreelancersList {
     };
 
     async getFreelancers() {
-        const result = await HttpUtils.request('/freelancers');
 
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await FreelancersService.getAllFreelancers();
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
 
-        if (result.error || !result.response || (result.response &&
-            (result.response.error || !result.response.freelancers))) {
-            return alert('There was an error with the request for freelancers. Contact support')
-        }
-        this.showListFreelancers(result.response.freelancers);
+        this.showListFreelancers(response.freelancers);
     };
 
     showListFreelancers(freelancers) {

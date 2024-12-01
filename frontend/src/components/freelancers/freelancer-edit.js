@@ -1,9 +1,9 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import config from "../../config/config.js";
 import {CommonUtils} from "../../utils/common-utils.js";
 import {FileUtils} from "../../utils/file-utils.js";
 import {ValidationUtils} from "../../utils/validation-utils.js";
 import {UrlUtils} from "../../utils/url-utils.js";
+import {FreelancersService} from "../../services/freelancers-service.js";
 
 export class FreelancerEdit {
     constructor(openNewRoute) {
@@ -49,19 +49,13 @@ export class FreelancerEdit {
     }
 
     async getFreelancer(id) {
-        const result = await HttpUtils.request(`/freelancers/${id}`);
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await FreelancersService.getFreelancer(id);
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
-
-        if (result.error || !result.response || (result.response && result.response.error)) {
-            // console.log(result.response);
-            return alert('There was an error with the request for freelancer. Contact support')
-        }
-        // console.log(result.response);
-        this.freelancerOriginalData = result.response;
-        this.showFreelancer(result.response);
+        this.freelancerOriginalData = response.freelancer;
+        this.showFreelancer(response.freelancer);
     };
 
     showFreelancer(freelancer) {
@@ -123,14 +117,10 @@ export class FreelancerEdit {
             }
 
             if (Object.keys(changedData).length > 0) {
-                const result = await HttpUtils.request(`/freelancers/${this.freelancerOriginalData.id}`, 'PUT', true, changedData);
-
-                if (result.redirect) {
-                    return this.openNewRoute(result.redirect);
-                }
-
-                if (result.error || !result.response || (result.response && result.response.error)) {
-                    return alert('There was an error with the changing for freelancer. Contact support')
+                const response = await FreelancersService.updateFreelancer(this.freelancerOriginalData.id, changedData);
+                if (response.error) {
+                    alert(response.error);
+                    return response.redirect ? this.openNewRoute(response.redirect) : null;
                 }
                 return this.openNewRoute(`/freelancers/view?id=${this.freelancerOriginalData.id}`);
             }

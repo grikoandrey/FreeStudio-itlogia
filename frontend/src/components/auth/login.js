@@ -1,6 +1,6 @@
 import {AuthUtils} from "../../utils/auth-utils.js";
-import {HttpUtils} from "../../utils/http-utils.js";
 import {ValidationUtils} from "../../utils/validation-utils.js";
+import {AuthService} from "../../services/auth-service.js";
 
 export class Login {
     constructor(openNewRoute) {
@@ -34,26 +34,21 @@ export class Login {
         this.commonErrorElement.style.display = 'none';
         if (ValidationUtils.validateForm(this.validations)) {
             //request
-
-            const result = await HttpUtils
-                .request('/login', 'POST', false, {
-                    email: this.emailElement.value,
-                    password: this.passwordElement.value,
-                    rememberMe: this.rememberMeElement.checked,
-                })
-
-            if (result.error || !result.response || (result.response && (!result.response.accessToken
-                || !result.response.refreshToken || !result.response.id || !result.response.name))) {
-                this.commonErrorElement.style.display = 'block';
-                return;
-            }
-
-            AuthUtils.setAuthInfo(result.response.accessToken, result.response.refreshToken, {
-                id: result.response.id,
-                name: result.response.name
+            const loginResult = await AuthService.logIn({
+                email: this.emailElement.value,
+                password: this.passwordElement.value,
+                rememberMe: this.rememberMeElement.checked,
             });
-            // window.location.href = '/';
-            this.openNewRoute('/');
+
+            if (loginResult) {
+                AuthUtils.setAuthInfo(loginResult.accessToken, loginResult.refreshToken, {
+                    id: loginResult.id,
+                    name: loginResult.name
+                });
+                // window.location.href = '/';
+                return this.openNewRoute('/');
+            }
+            this.commonErrorElement.style.display = 'block';
         }
     };
 }

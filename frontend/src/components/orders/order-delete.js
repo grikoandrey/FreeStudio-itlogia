@@ -1,5 +1,5 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import {UrlUtils} from "../../utils/url-utils";
+import {OrdersService} from "../../services/orders-service.js";
 
 export class OrderDelete {
     constructor(openNewRoute) {
@@ -14,14 +14,10 @@ export class OrderDelete {
     };
 
     async deleteOrder(id) {
-        const result = await HttpUtils.request(`/orders/${id}`, 'DELETE', true);
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
-        }
-        if (result.error || !result.response || (result.response && result.response.error)) {
-            console.log(result.response.message);
-            return alert('There was an error with the deleting order. Contact support')
+        const response = await OrdersService.deleteOrder(id);
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
         return this.openNewRoute(`/orders`);
     }

@@ -1,7 +1,7 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import config from "../../config/config.js";
 import {CommonUtils} from "../../utils/common-utils.js";
 import {UrlUtils} from "../../utils/url-utils";
+import {OrdersService} from "../../services/orders-service";
 
 export class OrderView {
     constructor(openNewRoute) {
@@ -19,16 +19,12 @@ export class OrderView {
     };
 
     async getOrder(id) {
-        const result = await HttpUtils.request(`/orders/${id}`);
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await OrdersService.getOrder(id);
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
-
-        if (result.error || !result.response || (result.response && result.response.error)) {
-            return alert('There was an error with the request for order. Contact support')
-        }
-        this.showOrder(result.response);
+        this.showOrder(response.order);
     };
 
     showOrder(order) {

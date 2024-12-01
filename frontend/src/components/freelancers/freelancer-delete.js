@@ -1,5 +1,5 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import {UrlUtils} from "../../utils/url-utils.js";
+import {FreelancersService} from "../../services/freelancers-service.js";
 
 export class FreelancerDelete {
     constructor(openNewRoute) {
@@ -8,20 +8,14 @@ export class FreelancerDelete {
         if (!id) {
             return this.openNewRoute('/');
         }
-
         this.deleteFreelancer(id).then();
     };
 
     async deleteFreelancer(id) {
-        const result = await HttpUtils.request(`/freelancers/${id}`, 'DELETE', true);
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
-        }
-
-        if (result.error || !result.response || (result.response && result.response.error)) {
-            console.log(result.response.message);
-            return alert('There was an error with the deleting freelancer. Contact support')
+        const response = await FreelancersService.deleteFreelancer(id);
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
         return this.openNewRoute(`/freelancers`);
     }

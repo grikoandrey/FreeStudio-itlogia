@@ -1,5 +1,5 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import {CommonUtils} from "../../utils/common-utils.js";
+import {OrdersService} from "../../services/orders-service.js";
 
 export class OrdersList {
     constructor(openNewRoute) {
@@ -9,17 +9,12 @@ export class OrdersList {
     };
 
     async getOrders() {
-        const result = await HttpUtils.request('/orders');
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await OrdersService.getAllOrders();
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
-
-        if (result.error || !result.response || (result.response &&
-            (result.response.error || !result.response.orders))) {
-            return alert('There was an error with the request for orders. Contact support')
-        }
-        this.showRecords(result.response.orders);
+        this.showRecords(response.orders);
     };
 
     showRecords(orders) {

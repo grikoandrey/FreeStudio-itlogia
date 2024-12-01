@@ -1,26 +1,21 @@
-import {HttpUtils} from "../utils/http-utils.js";
 import config from "../config/config.js";
+import {OrdersService} from "../services/orders-service.js";
 
 export class Dashboard {
     constructor(openNewRoute) {
 
         this.openNewRoute = openNewRoute;
         this.getOrders().then();
-
     };
 
     async getOrders() {
-        const result = await HttpUtils.request('/orders');
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await OrdersService.getAllOrders();
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
-
-        if (result.error || !result.response || (result.response &&
-            (result.response.error || !result.response.orders))) {
-            return alert('There was an error with the request for orders. Contact support')
-        }
-        this.loadOrdersInfo(result.response.orders);
-        this.loadCalendarInfo(result.response.orders);
+        this.loadOrdersInfo(response.orders);
+        this.loadCalendarInfo(response.orders);
     };
 
     loadOrdersInfo(orders) {

@@ -1,6 +1,7 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import {ValidationUtils} from "../../utils/validation-utils.js";
 import {UrlUtils} from "../../utils/url-utils.js";
+import {OrdersService} from "../../services/orders-service.js";
+import {FreelancersService} from "../../services/freelancers-service.js";
 
 export class OrderEdit {
     constructor(openNewRoute) {
@@ -46,34 +47,23 @@ export class OrderEdit {
     }
 
     async getOrder(id) {
-        const result = await HttpUtils.request(`/orders/${id}`);
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
-        }
-
-        if (result.error || !result.response || (result.response && result.response.error)) {
-            // console.log(result.response);
-            return alert('There was an error with the request for order. Contact support')
+        const response = await OrdersService.getOrder(id);
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
         // console.log(result.response);
-        this.orderOriginalData = result.response;
-        return result.response
+        this.orderOriginalData = response.order;
+        return response.order
     };
 
-
     async getFreelancers(currentFreelancersId) {
-        const result = await HttpUtils.request('/freelancers');
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await FreelancersService.getAllFreelancers();
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
-
-        if (result.error || !result.response || (result.response &&
-            (result.response.error || !result.response.freelancers))) {
-            return alert('There was an error with the request for freelancers. Contact support')
-        }
-        const freelancers = result.response.freelancers;
+        const freelancers = response.freelancers;
         for (let i = 0; i < freelancers.length; i++) {
             const option = document.createElement("option");
             option.value = freelancers[i].id;
@@ -171,14 +161,10 @@ export class OrderEdit {
             console.log(changedData);
 
             if (Object.keys(changedData).length > 0) {
-                const result = await HttpUtils.request(`/orders/${this.orderOriginalData.id}`, 'PUT', true, changedData);
-
-                if (result.redirect) {
-                    return this.openNewRoute(result.redirect);
-                }
-
-                if (result.error || !result.response || (result.response && result.response.error)) {
-                    return alert('There was an error with the changing for order. Contact support')
+                const response = await OrdersService.updateOrder(this.orderOriginalData.id, changedData);
+                if (response.error) {
+                    alert(response.error);
+                    return response.redirect ? this.openNewRoute(response.redirect) : null;
                 }
                 return this.openNewRoute(`/orders/view?id=${this.orderOriginalData.id}`);
             }

@@ -1,5 +1,5 @@
 import {AuthUtils} from "../../utils/auth-utils.js";
-import {HttpUtils} from "../../utils/http-utils.js";
+import {AuthService} from "../../services/auth-service.js";
 
 export class Logout {
     constructor(openNewRoute) {
@@ -14,7 +14,7 @@ export class Logout {
 
     async logout() {
         //request
-        await HttpUtils.request('/logout', 'POST', false, {
+        await AuthService.logOut({
             refreshToken: AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey),
         });
         AuthUtils.removeAuthInfo();

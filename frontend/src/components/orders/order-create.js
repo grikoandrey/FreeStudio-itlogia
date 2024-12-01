@@ -1,5 +1,6 @@
-import {HttpUtils} from "../../utils/http-utils.js";
 import {ValidationUtils} from "../../utils/validation-utils.js";
+import {FreelancersService} from "../../services/freelancers-service.js";
+import {OrdersService} from "../../services/orders-service.js";
 
 export class OrderCreate {
     constructor(openNewRoute) {
@@ -67,17 +68,13 @@ export class OrderCreate {
     };
 
     async getFreelancers() {
-        const result = await HttpUtils.request('/freelancers');
-
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+        const response = await FreelancersService.getAllFreelancers();
+        if (response.error) {
+            alert(response.error);
+            return response.redirect ? this.openNewRoute(response.redirect) : null;
         }
+        const freelancers = response.freelancers;
 
-        if (result.error || !result.response || (result.response &&
-            (result.response.error || !result.response.freelancers))) {
-            return alert('There was an error with the request for freelancers. Contact support')
-        }
-        const freelancers = result.response.freelancers;
         for (let i = 0; i < freelancers.length; i++) {
             const option = document.createElement("option");
             option.value = freelancers[i].id;
@@ -106,16 +103,12 @@ export class OrderCreate {
                 createData.completeDate = this.completeDate.toISOString();
             }
 
-            const result = await HttpUtils.request(`/orders`, 'POST', true, createData);
-
-            if (result.redirect) {
-                return this.openNewRoute(result.redirect);
+            const response = await OrdersService.createOrder(createData);
+            if (response.error) {
+                alert(response.error);
+                return response.redirect ? this.openNewRoute(response.redirect) : null;
             }
-
-            if (result.error || !result.response || (result.response && result.response.error)) {
-                return alert('There was an error with the request for order. Contact support')
-            }
-            return this.openNewRoute(`/orders/view?id=${result.response.id}`);
+            return this.openNewRoute(`/orders/view?id=${response.id}`);
         }
 
     };
